@@ -50,7 +50,6 @@ function get_precio_por_zip($zip, $peso,$largo){
     //verificar la correcta longitud del codigo postal
     $prefijo_cp = '';
     $prefijo_x_zonas = [46,12];
-    var_dump($prefijo_x_zonas);
     $tarifa_base = 0;    
     if (strlen($zip) == 5 ){        
         $prefijo_cp = substr($zip, 0, 2);
@@ -60,18 +59,28 @@ function get_precio_por_zip($zip, $peso,$largo){
 
     //si el código postal es de valencia se buscará a que zona pertenece
     if (in_array($prefijo_cp, $prefijo_x_zonas)) {
+
         //filtramos por el post_type de castellon valencia para sacar su info y de ahí cogeremos sus zonas y demás
         $posts_zona = get_posts(array(
             'post_type'=>'valencia_castellon',
             'order' => 'DESC', 
             'numberposts' => '200'
         ));
-        $postmeta_id_zona = get_post_meta();
+        
         /*aquí lo que voy a hacer va a ser extraer la id de la zona y luego extraeré la id asignada que tienen los post_metas,
         Si coinciden entonces sabremos en que zona nos ubicamos y luego de ahí podremos sacara la tarifa de la zona*/
-        foreach ($posts_zona as $zona) {
-            var_dump("ids de las zonas->".$zona->ID, $zona->post_title."<br>");
-        }
+
+            foreach ($posts_zona as $zona) {
+                /*$postmeta_zona_data = get_post_meta($zona->ID);*/
+                $postmeta_cp = get_post_meta($zona->ID,'codigo_postal',true);
+                $zona_ubi = get_post_meta($zona->ID,'nombre',true);
+                if($postmeta_cp == $zip){
+                    var_dump("Se ha detectado la zona correspondiente -> ".$zona_ubi."<br>");
+                }else {
+                    var_dump("Lo siento pero no se ha podido ubicar el cp -> ".$zona_ubi."<br>");
+                }
+            }
+            
     }
 
     // buscar la localidad
