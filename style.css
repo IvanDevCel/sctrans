@@ -1,0 +1,36 @@
+.container_cotizador{
+	/*padding:5% 14%;*/
+	padding:30px 15px;
+	margin:0 auto;
+	max-width :900px
+}
+.adc-form input.adicionar,
+.adc-form input#gform_submit_button_1,.contratar,.nueva-cotizacion {
+    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+    letter-spacing: 1px;
+    border-radius: 0;
+    padding: 15px 30px;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 500;
+    background-color: #007DCC !important;
+    color: #fff !important;
+    text-transform: uppercase !important;
+}
+.adc-form input.adicionar:hover,
+.adc-form input#gform_submit_button_1:hover,.contratar:hover,.nueva-cotizacion:hover {
+    background-color: #f9df17 !important;
+    color: #007DCC !important;
+}
+.gform_footer.top_label{
+	text-align: center;
+}
+li#menu-posts-cotizaciones{
+    display:none;
+}
+@media (max-width: 967px) {
+   .container_cotizador{
+		/*padding:5% 10%;*/
+		margin:0 auto;
+	}
+}
