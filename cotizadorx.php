@@ -66,7 +66,6 @@ function get_precio_por_zip($zip, $peso,$largo){
 
     //si el código postal es de valencia se buscará a que zona pertenece
     if (in_array($prefijo_cp, $prefijo_x_zonas)) {
-
         //filtramos por el post_type de castellon valencia para sacar su info y de ahí cogeremos sus zonas y demás
         $zona_posts = get_posts(array(
             'post_type'=>'valencia_castellon',
@@ -83,24 +82,23 @@ function get_precio_por_zip($zip, $peso,$largo){
                     'codigo_postal',
                     true
                 );
-
-                if($postmeta_cp == $zip){
+                $posts_array = explode(' ',$postmeta_cp);
+                if(in_array($zip, $posts_array)){
                     $zona_ubi = get_post_meta($zona_post->ID,'nombre',true);
                     $tarifas_x_zonas = get_post_meta($zona_post->ID, 'tarifa_por_peso','DESC' );
                     /*Deberemos implantar un código que detecte el código postal donde nos ubicamos para poder aceptarlo*/
                     $tarifa_zona_bool = true;
-                    var_dump("Se ha detectado la zona correspondiente -> ".$zona_ubi."<br>");
+                    var_dump("Código postal detectado" .$zip. "<br>Extrayendo los códigos postales de la " .$zona_ubi. ": " .$postmeta_cp. "<br>Donde vamos a extraer las siguientes tarifas de la zona correspondiente: " .$tarifas_x_zonas);
                     break; // salimos del loop si encontramos una zona válida
                 }else{
                     $tarifa_zona_bool = false;
-                    var_dump("<br>Lo sentimos pero aunque haya pasado los filtros este CP no existe en estas zonas"); /*BORRAR*/
+                    var_dump("<br>Lo sentimos pero aunque haya pasado los filtros o este CP no existe o has introducido losdatos incorrectamente"); /*BORRAR*/
                 }
 
             }     
     }
     // buscar la localidad
     if(!in_array($prefijo_cp, $prefijo_x_zonas)){
-        var_dump("estoy acá");
         $localidades = get_posts(array('post_type'=>'valencia_provincia', 'order' => 'DESC', 'numberposts' => '100'));
         $localidad_seleccionada = false;
         foreach ($localidades as $localidad) {
@@ -122,7 +120,7 @@ function get_precio_por_zip($zip, $peso,$largo){
 
     // Obtener array de tarifas de la localidad seleccionada o de la zona seleccionada
 
-    var_dump($localidad->post_title."<-Esta es la comunidad asignada y sus datos->".$tarifas_string);
+    var_dump("<br>".$localidad->post_title."<-Esta es la comunidad asignada y sus datos->".$tarifas_string);
     var_dump("Valencia->".$tarifas_x_zonas);
 
     if(empty($tarifas_string)) {
