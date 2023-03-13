@@ -1,4 +1,23 @@
-<?php 
+<?php
+/*require_once('/home/sctrans/www/wp-content/plugins/gravityforms/gravityforms.php' );
+
+if ( is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
+    var_dump("it's ok");
+} else {
+   var_dump("error");
+}
+
+add_filter( 'gform_merge_tag_filter', 'filter_merge_tag', 10, 6 );
+$text = '{precio_base}';
+$url_encode = true;
+function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br ) {
+    if ( $text == 'precio_base' ) {
+        var_dump("hello");
+    }else{
+        var_dump("bye");
+    }
+}*/
+/*var_dump($content);*/
     /*function ru_mostrar_error($mensaje){
         echo '<div class="ru_error">' . $mensaje . '</div>';
     }
@@ -170,7 +189,7 @@
                     </thead>
                     <tbody>
                         <tr><td>Precio Base</td>
-                            <td style="text-align:right;"><span id="valor_precio_base"><?php echo $precio_base; ?> </span>€</td>
+                            <td style="text-align:right;"><span id="valor_precio_base" ><?php echo $precio_base; ?> </span>€</td>
                         </tr>
                         <tr><td>Suplemento Aeropuerto/Puerto</td>
                             <td style="text-align:right;"><span id="valor_envio_aereo"></span><?php echo $valor_envio_aereo; ?> €</td>
@@ -551,5 +570,7 @@
                 });
             })(jQuery);    
         </script>
+    <?php
+    ?>
     <?php } ?>
 </div>
