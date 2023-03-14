@@ -42,18 +42,20 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
 ?>
 <div id="primary" class="container_cotizador">
 
-    <?php if(isset($_GET['coti_sent'])){ 
+    <?php if(isset($_GET['coti_sent'])){
         global $wpdb; 
         $sql = " SELECT * ".
                " FROM ".$wpdb->prefix."gf_entry_meta ".
                " WHERE `form_id` = 1 AND `entry_id` =".$_GET['coti_sent'];
-        $result = $wpdb->get_results($sql);    
+        $result = $wpdb->get_results($sql);
         //echo "<pre>";
         //print_r($result);
         //echo "</pre>";
         $impt_plataforma=empty(get_option('cotizacion_plataforma_elevadora'))?'35':get_option('cotizacion_plataforma_elevadora');
         $nombre_user="";
         $valor_envio_aereo = 0;
+        $usuario = get_userdata (get_current_user_id());
+        $user_publico = $usuario->display_name;
         $valor_plataforma_elevadora = 0;
         $mercancia_peligrosa="No";
         $mercancia_no_remontable="No";
@@ -158,71 +160,86 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
         }else{
             $total = $precio_base+$valor_envio_aereo+$valor_plataforma_elevadora+$valor_mercancia_peligrosa+$importe_por_mozo_hora;
         }  ?>
+        <style>
+            td{
+                border-bottom: solid 5px #f7f8f9;
+            }
+
+            table, td, th {
+                border-right: 0px;
+                border-left: 0px;
+                border-top: 0px;
+            }
+        </style>
         <div class="confirmacion" >
             <input type="hidden" name="nro_cotizacion" id="nro_cotizacion" value="<?php echo $_GET['coti_sent'];?>">
-            <h4>Cotización #<?php echo $_GET['coti_sent'];?></h4>
-            <p>Su cotización fue generada exitosamente. Esta cotización está sujeta a los siguientes términos y condiciones que se enunciona <a href="<?php echo site_url();?>/condiciones-generales-transporte-terrestre/" target="_blank">aquí</a></p>
+            <h4 style="text-align: justify;">Resumen de cotización #<?php echo $_GET['coti_sent'];?></h4>
+            <p>Su cotización fue generada exitosamente. Esta cotización está sujeta a los siguientes <a href="<?php echo site_url();?>/condiciones-generales-transporte-terrestre/" target="_blank">términos y condiciones</a>.</p>
             <div class="detalle-cotizacion">
-                <p><label>Cliente: </label><span class="data-cliente"><?php echo $nombre_user; ?></span></p>
-                <p><label>Cod. Postal Origen: </label>
-                    <span class="data-zip-origen"><?php echo $cod_postal_origen; ?></span>
-                </p>
-                <p><label>Cod. Postal Destino: </label>
-                    <span class="data-zip-destino"><?php echo $cod_postal_destino; ?></span>
-                </p>
-                <p><label>Paquetes: </label>
-                   <span class="data-paquetes"><?php echo $paquetes;?></span>
-                </p>
-                <p><label>Peso: </label><span class="data-peso"><?php echo $peso;?> </span>kg.</p>
-                <p><label>Volumen: </label>
-                    <span class="data-volumen"><?php echo $volumen;?> </span>m3
-                </p>
-                <p><label>Mozo/Hora: </label>
-                    <span class="data-volumen"><?php echo $valor_importe_mozo;?> </span>hora
-                </p>
+                <div style="overflow-x:auto;">
+                    <table class="table1" style="overflow-x:auto">
+                        <tbody>
+                            <tr>
+                                <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Cliente</strong></td>
+                                <td colspan="2" style="padding: 9px; background: #F9F6F0; color: #010100; "><?php echo $user_publico;?></td>
+                                <td style="padding: 9px; background: #0A5687; color: white; " ><strong>C.P. Origen </strong></td>
+                                <td colspan="2" style="padding: 9px; background: #F9F6F0; color: #010100;" ><?php echo $cod_postal_origen; ?></td>
+                                <td style="padding: 9px; background: #0A5687; color: white; " ><strong>C.P. Destino  </strong></td>
+                                <td colspan="2" style="padding: 9px; background: #F9F6F0; color: #010100;" ><?php echo $cod_postal_destino; ?></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Paquetes </strong></td>
+                                <td colspan="2" style="padding: 9px; background: #F9F6F0; color: #010100; " ><?php echo $paquetes;?></td>
+                                <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Peso </strong></td>
+                                <td colspan="2" style="padding: 9px; background: #F9F6F0; color: #010100; " ><?php echo $peso;?> kg.</td>
+                                <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Volumen </strong></td>
+                                <td colspan="2" style="padding: 9px; background: #F9F6F0; color: #010100; " ><?php echo $volumen;?> m3</td>   
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Descripción</th>
-                            <th>Total</th>                
+                    <tbody >
+                        <tr style="">
+                            <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Precio Base</strong></td>
+                            <td style="text-align:center; background: #F9F6F0; color: #010100; width: 400px;"><span id="valor_precio_base"><?php echo $precio_base; ?> </span>€</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Precio Base</td>
-                            <td style="text-align:right;"><span id="valor_precio_base" ><?php echo $precio_base; ?> </span>€</td>
+                        <tr style="">
+                            <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Suplemento Aeropuerto/Puerto</strong></td>
+                            <td style="text-align:center; background: #F9F6F0; color: #010100; width: 400px;"><span id="valor_envio_aereo"></span><?php echo $valor_envio_aereo; ?> €</td>
                         </tr>
-                        <tr><td>Suplemento Aeropuerto/Puerto</td>
-                            <td style="text-align:right;"><span id="valor_envio_aereo"></span><?php echo $valor_envio_aereo; ?> €</td>
-                        </tr>
-                        <tr><td>Plataforma Elevadora</td>
-                            <td style="text-align:right;">
+                        <tr style="">
+                            <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Plataforma Elevadora</strong></td>
+                            <td style="text-align:center; background: #F9F6F0; color: #010100; width: 400px;">
                                 <span id="valor_plataforma_elevadora"></span><?php echo $valor_plataforma_elevadora;?> €
                             </td>
                         </tr>
-                        <tr><td>Mercancía Peligrosa</td>
-                            <td style="text-align:right;">
+                        <tr style="">
+                            <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Mercancía Peligrosa</strong></td>
+                            <td style="text-align:center; background: #F9F6F0; color: #010100; width: 400px;">
                                 <span id="valor_mercancia_peligrosa">
                                 <?php echo $valor_mercancia_peligrosa; ?> </span>€
                             </td>
                         </tr>
                         <?php if($mercancia_peligrosa=="Si"){ ?>
-                        <tr><td>Recargo del combustible</td>
-                            <td style="text-align:right;">
-                                <span id="">
+                        <tr><td style="padding: 9px; background: #0A5687; color: white; " ><strong>Recargo del combustible</strong></td>
+                            <td style="text-align:center; background: #F9F6F0; color: #010100;width: 400px;">
+                                <span id="valor_recargo_combustible">
                                 <?php echo $valor_rec_comb; ?> </span>€
                             </td>
                         </tr>
-                        <?php } ?>    
-                        <tr><td>Peonaje por Hora/Mozo</td>
-                            <td style="text-align:right;">
+                        <?php } ?>  
+                        <tr style="">
+                            <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Peonaje por Hora/Mozo</strong></td>
+                            <td style="text-align:center; background: #F9F6F0; color: #010100;width: 400px;">
                                 <span id="importe_por_mozo_hora">
                                 <?php echo $importe_por_mozo_hora; ?> </span>€
                             </td>
                         </tr>
                     </tbody>
                     <tfoot>
-                        <tr><td><strong>TOTAL</strong></td>
-                            <td style="text-align:right;font-weight:bold;"><span id="valor_total"><?php echo $total;?></span> €</td>
+                        <tr><td style="padding: 9px; background: #0A5687; color: white;font-size: 25px;" ><strong>TOTAL:</strong></td>
+                            <td style="text-align:center; background: #F9F6F0; font-weight:bold;width: 400px;"><span id="valor_total"><?php echo number_format($total, 2);?></span> €</td>
                         </tr>
                     </tfoot>
                 </table>

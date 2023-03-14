@@ -350,7 +350,7 @@ function send_add_contratar(){
             <h2 style="text-align: center; margin-top: 40px; font-weight: 10px;">Muchas gracias por contratar nuestro servicio.</h2>
             <h3 style="text-align: center; font-size: 15px;">Los datos de su cotización se encuentran en
             <div style="text-align: center; margin-top: 10px; font-size: 18px;">'.do_shortcode('[gravitypdf id="61c9ff718c51c"  entry="'.$nro_cotizacion.'" text="Descargar PDF Cotización"]').'</div>
-            <h4>Su cotización fue generada exitosamente. Esta cotización está sujeta a los siguientes términos y condiciones que se enunciona <a href="'.site_url().'/condiciones-generales-transporte-terrestre/" target="_blank">aquí</a></h4>
+            <h4>Su cotización fue generada exitosamente. Esta cotización está sujeta a los siguientes <a href="'.site_url().'/condiciones-generales-transporte-terrestre/" target="_blank">términos y condiciones</a>.</h4>
             <div class="detalle-cotizacion">
             <h2 class=" text-align: center; margin-top: 20px;">Cotización #'.$nro_cotizacion.'</h2>
             <div class="tableInside">
@@ -360,11 +360,11 @@ function send_add_contratar(){
                         <td style="padding: 15px; background: #F9F6F0; color: #020f42;">'.$nombre_user.'</td>
                     </tr>
                     <tr>
-                        <td style="padding: 15px; background: #0A5687; color: #fff;"><b>Cod.Postal Origen:</b></td>
+                        <td style="padding: 15px; background: #0A5687; color: #fff;"><b>C.P. Origen:</b></td>
                         <td style="padding: 15px; background: #F9F6F0; color: #020f42;">'.$cod_postal_origen.'</td>  
                     </tr>
                     <tr>
-                        <td style="padding: 15px; background: #0A5687; color: #fff;"><b>Cod.Postal Destino:</b></td>
+                        <td style="padding: 15px; background: #0A5687; color: #fff;"><b>C.P. Destino:</b></td>
                         <td style="padding: 15px; background: #F9F6F0; color: #020f42;">'.$cod_postal_destino.'</td>
                     </tr>
                     <tr>
@@ -415,34 +415,34 @@ function send_add_contratar(){
             <table style=" padding: 5px; margin: 8px auto; font-size: 16px; width: 100%; margin-bottom: 30px;">
                 <tbody>
                     <tr><td style="padding: 15px; width: 190px; background: #0A5687; color: #fff;"><b>Precio Base</b></td>
-                        <td style="padding: 15px; background: #F9F6F0; color: #020f42;"><span id="valor_precio_base">'.$precio_base.'€</span></td>
+                        <td style="padding: 15px; background: #F9F6F0; color: #020f42; text-align: center;"><span id="valor_precio_base">'.$precio_base.'€</span></td>
                     </tr>
                     <tr><td style="padding: 15px; width: 190px; background: #0A5687; color: #fff;"><b>Envío Aereo</b></td>
-                        <td style="padding: 15px; background: #F9F6F0; color: #020f42;"><span id="valor_envio_aereo">'.$valor_envio_aereo.'€</span></td>
+                        <td style="padding: 15px; background: #F9F6F0; color: #020f42; text-align: center;"><span id="valor_envio_aereo">'.$valor_envio_aereo.'€</span></td>
                     </tr>
                     <tr><td style="padding: 15px; width: 190px; background: #0A5687; color: #fff;"><b>Plataforma Elevadora</b></td>
-                        <td style="padding: 15px; background: #F9F6F0; color: #020f42;"><span id="valor_plataforma_elevadora">'.$valor_plataforma_elevadora.'€</span></td>
+                        <td style="padding: 15px; background: #F9F6F0; color: #020f42; text-align: center;"><span id="valor_plataforma_elevadora">'.$valor_plataforma_elevadora.'€</span></td>
                     </tr>
                     <tr><td style="padding: 15px; width: 190px; background: #0A5687; color: #fff;"><b>Mercancía Peligrosa</b></td>
-                        <td style="padding: 15px; background: #F9F6F0; color: #020f42;"><span id="valor_mercancia_peligrosa">'.$valor_mercancia_peligrosa.'€</span></td>
+                        <td style="padding: 15px; background: #F9F6F0; color: #020f42; text-align: center;"><span id="valor_mercancia_peligrosa">'.$valor_mercancia_peligrosa.'€</span></td>
                     </tr>';
     if($mercancia_peligrosa=="Si"){
         $html .='   <tr><td style="padding: 15px; width: 190px; background: #0A5687; color: #fff;"><b>Recargo del combustible</b></td>
-                        <td style="padding: 15px; background: #F9F6F0; color: #020f42;"><span id="valor_recargo_combustible">'.$valor_rec_comb.'€</span></td>
+                        <td style="padding: 15px; background: #F9F6F0; color: #020f42; text-align: center;"><span id="valor_recargo_combustible">'.$valor_rec_comb.'€</span></td>
                     </tr>';
     }                
     $html .='       <tr><td style="padding: 15px; width: 190px; background: #0A5687; color: #fff;"><b>Peonaje por Hora/Mozo</b></td>
-                        <td style="padding: 15px; background: #F9F6F0; color: #020f42;"><span id="importe_por_mozo_hora">'.$importe_por_mozo_hora.'€</span></td>
+                        <td style="padding: 15px; background: #F9F6F0; color: #020f42; text-align: center;"><span id="importe_por_mozo_hora">'.$importe_por_mozo_hora.'€</span></td>
                     </tr>
                 </tbody>
                 <tfoot>
-                    <tr><td style="padding: 15px; width: 190px; background: #0A5687; color: #fff;"><b>TOTAL</b></td>
-                        <td style="padding: 15px; background: #F9F6F0; color: #020f42;"><span id="valor_total">'.$total.'€</span></td>
+                    <tr><td style="padding: 15px; width: 190px; background: #0A5687; color: #fff;"><b style="font-size: 18px;">TOTAL:</b></td>
+                        <td style="padding: 15px; background: #F9F6F0; color: #020f42; text-align: center;"><span id="valor_total"><b style="font-size: 16px;">'.number_format($total, 2).'€</b></span></td>
                     </tr>
                 </tfoot>
             </table>
             </div>
-            <p style="text-align: justify;">Para encontrar nuestros diferentes canales de contacto en nuestra página <a href="https://sctrans.es/contacto-y-cotizacion/"target="_blank">https://sctrans.es/contacto-y-cotizacion/</a> para obtener información sobre su servicio.</p>
+            <p style="text-align: justify;">Para encontrar nuestros diferentes canales de contacto en nuestra página <a href="https://sctrans.es/contacto/"target="_blank">https://sctrans.es/contacto/</a> para obtener información sobre su servicio.</p>
             <p style="text-align: justify;">También puede revisar  sobre las condiciones generales del transporte terrestre aquí  <a href="https://sctrans.es/condiciones-generales-transporte-terrestre/" target="_blank">https://sctrans.es/condiciones-generales-transporte-terrestre/ </a></p>
             <p style="text-align: justify;">Si usted tiene alguna pregunta sobre esta cotización, por favor, póngase en contacto con nosotros. </p>        
         </div>';
@@ -452,12 +452,13 @@ function send_add_contratar(){
         //'Cc: John Q Codex <[email protected]>',
         //'Cc: [email protected]',
     );*/  
+
     $usuario = get_userdata (get_current_user_id());
     $usuario_email=$usuario->user_email;
-    wp_mail($email,"SC Trans -  Servicio Contratado",$html,$headers);
+    wp_mail($email,"SC Trans -  Servicio Contratado",$html,$headers, $attachments);
     //$email="rodrigolopez2012187@gmail.com";
     //wp_mail($email,"SC Trans -  Servicio Contratado",$html,$headers);
-    wp_mail($usuario_email,"SC Trans -  Servicio Contratado",$html,$headers);
+    wp_mail($usuario_email,"SC Trans -  Servicio Contratado",$html,$headers, $attachments);
 
     
 
