@@ -105,73 +105,146 @@
 		        setTimeout(function(){$(".msj").html("");},2000);
 		    });
 	   });
-	   $("#gform_submit_button_1").click(function(){
-	   	  volumen=$("#input_1_6").val();
+
+	   // desactivar el botón de envío al cargar la página
+		$('#gform_submit_button_1').prop('disabled', true);
+
+	   //Con el código de aquí verificaremos todo a golpe de teclado
+	   $("input").blur(function(){
           peso=$("#input_1_5").val();
-          cod_postal_destino=$("#input_1_10").val();
+		  isUnvalid = false;
           cod_postal_origen=$("#input_1_11").val();
+          cod_postal_destino=$("#input_1_10").val();
           largo=$("#input_1_29").val();
           tipo_servicio=$("#input_1_15").val();
-          if(volumen==""){
-              return true;
-          }else{
-          	 if(peso==""){
-                return true;
-          	 }else{
-          	 	if(cod_postal_destino==""){
-                    return true; 
-          	 	}else{
-          	 		if(cod_postal_origen==""){
-                       return true;
-          	 		}else{
-          	 			console.log(tipo_servicio);
-          	 			if(tipo_servicio=="Recogida"){
-                           cp=cod_postal_origen.substring(0,2);
-          	 			}else{
-          	 			   cp=cod_postal_destino.substring(0,2);	
-          	 			}
-          	 			console.log("cp = " + cp);
-          	 			prefijo_cp=$("#input_1_33").val();
-          	 			console.log("prefijo cp = " + prefijo_cp);
-          	 			prefijo_cp=prefijo_cp.split('|');
-          	 			valido_cp=false;
-          	 			for (var i = 0; i < prefijo_cp.length; i++) {
-          	 				if(prefijo_cp[i]==cp){
-                              valido_cp=true;
-          	 				}
-          	 				console.log(prefijo_cp[i]);
-          	 			}
-          	 			console.log(valido_cp);
-          	 			//alert(cp);
-          	 			if(valido_cp==false){
-                           if(tipo_servicio=="Recogida"){
-                           	   $("#msj_1_10").removeClass('validation_message');
-                           	   $("#msj_1_10").html('');
-                               $("#msj_1_11").addClass('validation_message');
-                               $("#msj_1_11").html('Código Postal Inválido.');
-                           }else{
-                           	   $("#msj_1_11").removeClass('validation_message');
-                           	   $("#msj_1_11").html('');
-                               $("#msj_1_10").addClass('validation_message');
-                               $("#msj_1_10").html('Código Postal Inválido');
-                           }
-                           return false;
-          	 			}else{
-          	 				if($("#input_1_6").val()==0){
-                                Swal.fire({
-                                      title: 'Estimado Cliente',
-                                      text: 'Volumen Invalido,Ingrese el largo,ancho y alto distinto de cero.',
-                                      icon: 'error'
-                                }); 
-          	 				}else{
-                                $("#gform_1").submit();
-                            }
-          	 			}
-          	 		}
-          	 	}
-          	 }
-          }
-	   	   
-       });
+		  zonas_prefijo = ['46', '12'];
+		  codigos_zona = $('#input_1_36').val();
+
+
+		// VERIFICAMOS QUE TODOS LOS CAMPOS ESTEN LLENOS SI NO LO ESTÁN EL BOTO DE ENVIO SE DESHABILITA
+			if (cod_postal_destino == "") {
+				$("#msj_1_10").html('Codigo Postal vacío.');
+				$("#msj_1_10").addClass('validation_message');
+				$('#gform_submit_button_1').prop('disabled', true);
+			}else{
+				$("#msj_1_10").html('');
+				$("#msj_1_10").removeClass('validation_message');
+			}
+
+			if (cod_postal_origen == "") {
+				$("#msj_1_11").html('Codigo Postal vacío.');
+				$("#msj_1_11").addClass('validation_message');
+					$('#gform_submit_button_1').prop('disabled', true);
+			}else{
+				$("#msj_1_11").html('');
+				$("#msj_1_11").removeClass('validation_message');
+			}
+
+			if (peso == "" || peso == 0) {
+				$("#msj_1_5").html('El peso debe ser mayor a 0 y no puede estar vacío');
+				$("#msj_1_5").addClass('validation_message');
+				$('#gform_submit_button_1').prop('disabled', true);
+			}else{
+				$("#msj_1_5").html('');
+				$("#msj_1_5").removeClass('validation_message');
+			}
+
+				if(tipo_servicio=="Recogida"){
+					$('#gform_submit_button_1').prop('disabled', true);
+					cp=cod_postal_origen.substring(0,2);
+					cp_zona= cod_postal_origen;
+				}else{
+					$('#gform_submit_button_1').prop('disabled', true);
+					cp=cod_postal_destino.substring(0,2);
+					cp_zona= cod_postal_destino;	
+				}
+
+				//SE VERIFICA SI EL INPUT ESTA VACÍO O NO SDI LO ESTA NO ENTRARÁ SI NO LO ESTA ENTRARÁ
+				if(cp_zona != ""){
+					zona_valida = true;
+					if(jQuery.inArray(cp,zonas_prefijo) !== -1){
+						codigos_zona = codigos_zona.split(' ');
+						console.log(codigos_zona);
+						if(codigos_zona.includes(cp_zona,0)){
+							console.log("elcodigo postal",cp_zona,"existe");
+							zona_valida = true;
+						}else{
+							console.log("el codigo postal",cp_zona,"no existe");
+							zona_valida = false;
+						}
+					}
+					
+					console.log("cp = " + cp);
+					prefijo_cp=$("#input_1_33").val();
+					console.log("prefijo cp = " + prefijo_cp);
+					prefijo_cp=prefijo_cp.split('|');
+					valido_cp=false;
+					for (var i = 0; i < prefijo_cp.length; i++) {
+						if(prefijo_cp[i]==cp){
+							valido_cp=true;
+						}
+						console.log(prefijo_cp[i]);
+					}
+
+					if(valido_cp == false || zona_valida == false){
+						$('#gform_submit_button_1').prop('disabled', true);
+						Swal.fire({
+							title: 'Estimado Cliente',
+							text: 'Este código postal o no existe o no es correcto',
+							icon: 'warning'
+						});
+					}else{
+						if(peso == "" || peso == 0){
+							$("#msj_1_5").html('El peso debe ser mayor a 0 y no puede estar vacío');
+							$("#msj_1_5").addClass('validation_message');
+							$('#gform_submit_button_1').prop('disabled', true);
+						}else{				
+							$("#msj_1_5").html('');
+							$("#msj_1_5").removeClass('validation_message');
+							$('#gform_submit_button_1').prop('disabled', false);
+						}
+
+					}
+				}
+		
+	   });
+
+	   $('#input_1_15').change(function() {
+		peso=$("#input_1_5").val();
+		cod_postal_origen=$("#input_1_11").val();
+		cod_postal_destino=$("#input_1_10").val();
+		// Se ha seleccionado otro valor en el select
+		var valorSeleccionado = $(this).val(); // obtiene el valor seleccionado
+
+		if(peso == "" || peso == 0){
+			$('#gform_submit_button_1').prop('disabled', true);
+			$("#msj_1_5").html('Peso vacío.');
+			$("#msj_1_5").addClass('validation_message');
+		}else{
+			$("#msj_1_5").html('');
+			$("#msj_1_5").removeClass('validation_message');
+		}
+		
+		if(cod_postal_destino == ""){
+			$("#msj_1_10").html('Codigo Postal vacío.');
+			$("#msj_1_10").addClass('validation_message');
+		}else{
+			$("#msj_1_10").html('');
+			$("#msj_1_10").removeClass('validation_message');
+		}
+
+		if(cod_postal_origen == ""){
+			$("#msj_1_11").html('Codigo Postal vacío.');
+			$("#msj_1_11").addClass('validation_message');
+		}else{
+			$("#msj_1_11").html('');
+			$("#msj_1_11").removeClass('validation_message');
+		}
+
+		$('#gform_submit_button_1').prop('disabled', true);
+		console.log('Se ha seleccionado la opción ' + valorSeleccionado);
+		
+		// Aquí puedes agregar el código que deseas ejecutar cuando se selecciona otro valor en el select
+	  });
 	});	
 })(jQuery);

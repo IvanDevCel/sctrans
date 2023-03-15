@@ -363,6 +363,7 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                     });
                     $("#field_1_10").append("<div id='msj_1_10'></div>");
                     $("#field_1_11").append("<div id='msj_1_11'></div>");
+                    $("#field_1_5").append("<div id='msj_1_5'></div>");
                     function calcular_volumen(){
                         total_paquete=0;
                         $(".paquete").each(function( index ) {
@@ -510,6 +511,7 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                         $("#input_1_29").val(total_largo);
                         volumen=calcular_volumen();
                         $("#input_1_6").val(volumen.toFixed(2));
+                        console.log("esto es una prueba de entrada de largo",$(this).val());
                         /////////////////Mercancia Peligrosa//////
                         //actualizar_boton_cotizar();
                         merc_remontable=$("#input_1_18").val();
@@ -569,6 +571,15 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                         volumen=calcular_volumen();
                         $("#input_1_6").val(volumen.toFixed(2));
                     });
+                    
+                    $(document).on('change','.largo, .alto, .ancho',function(event){
+                        if($('.largo').val() == 0 || $('.alto').val() == 0 || $('.ancho').val() == 0){
+                            $("#gform_submit_button_1").prop("disabled",true);
+                        }else{
+                            $("#gform_submit_button_1").prop("disabled",false);
+                        }
+                    });
+
                     if($("#input_1_18").val()=="Si"){
                         $(".msj_peligroso").html("Estimado Cliente:<br>Esta cotización no se puede realizar por la web, pongase en contacto con nuestro departamento comercial a la dirección: info@sctrans.es <br><br>");
                         Swal.fire({
