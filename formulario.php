@@ -55,7 +55,7 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
         $nombre_user="";
         $valor_envio_aereo = 0;
         $usuario = get_userdata (get_current_user_id());
-        $user_publico = $usuario->display_name;
+        $user_publico = $usuario->user_email;
         $valor_plataforma_elevadora = 0;
         $mercancia_peligrosa="No";
         $mercancia_no_remontable="No";
@@ -76,6 +76,10 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
             exit();  
         }
         foreach ($result as $value) {
+            if($value->meta_key === '16'){
+                $ciudad_origen = $value->meta_value;
+            }
+            
             switch($value->meta_key) {
                 case 3:
                      $paquetes=$value->meta_value;
@@ -132,23 +136,24 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                 break;
             }
         }
+
         $volumen_cot=$volumen*270;
         if($volumen_cot>$peso){
-           $peso_cotizar=$volumen*270;
-        }else{
-           $peso_cotizar=$peso;
-        }
+            $peso_cotizar=$volumen*270;
+         }else{
+            $peso_cotizar=$peso;
+         }
         if($tipo_servicio=="Recogida"){
             /*echo $cod_postal_destino."<br>";
             echo $peso_cotizar."<br>";
             echo $largo."<br>";*/
-            $precio_base = get_precio_por_zip($cod_postal_origen,$peso_cotizar,$largo);
+            $precio_base = get_precio_por_zip($ciudad_origen, $cod_postal_origen ,$peso_cotizar,$largo);
         }else{
-            $precio_base = get_precio_por_zip($cod_postal_destino ,$peso_cotizar,$largo); 
+            $precio_base = get_precio_por_zip($ciudad_origen, $cod_postal_destino ,$peso_cotizar,$largo); 
         }
         
         if ($precio_base == false) {
-           echo "<h1>Lo siento, No podemos obtener el precio para el código postal ingresado.</h1>";
+           echo "<h1>Lo siento, No podemos obtener el precio para el código postal ingreeesado.</h1>";
            exit();
         }    
         $importe_por_mozo_hora=round($valor_importe_mozo*$peonaje,2);
@@ -202,7 +207,7 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                     <tbody >
                         <tr style="">
                             <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Precio Base</strong></td>
-                            <td style="text-align:center; background: #F9F6F0; color: #010100; width: 400px;"><span id="valor_precio_base"><?php echo $precio_base; ?> </span>€</td>
+                            <td style="text-align:center; background: #F9F6F0; color: #010100; width: 400px;"><span id="valor_precio_base"><?php echo number_format($precio_base,2); ?> </span>€</td>
                         </tr>
                         <tr style="">
                             <td style="padding: 9px; background: #0A5687; color: white; " ><strong>Suplemento Aeropuerto/Puerto</strong></td>
@@ -222,7 +227,7 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                             </td>
                         </tr>
                         <?php if($mercancia_peligrosa=="Si"){ ?>
-                        <tr><td style="padding: 9px; background: #0A5687; color: white; " ><strong>Recargo del combustible</strong></td>
+                        <tr><td style="padding: 9px; background: #0A5687; color: white; " ><strong>Recargo del combustible <?php echo "(".$rec_comb."%)"?></strong></td>
                             <td style="text-align:center; background: #F9F6F0; color: #010100;width: 400px;">
                                 <span id="valor_recargo_combustible">
                                 <?php echo $valor_rec_comb; ?> </span>€
@@ -332,7 +337,7 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                                $("#input_1_10").val("11207");
                             }
                             if(ciudad_origen=='Vigo'){
-                               $("#input_1_10").val("36410");  
+                               $("#input_1_10").val("36416");  
                             }
                             $("#input_1_11").val("");
                             $("#input_1_11").attr("readonly",false);
@@ -354,7 +359,7 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                                $("#input_1_11").val("11207");
                             }
                             if(ciudad_origen=='Vigo'){
-                               $("#input_1_11").val("36410");  
+                               $("#input_1_11").val("36416");  
                             }
                             $("#input_1_10").val("");
                             $("#input_1_10").attr("readonly",false);
@@ -400,7 +405,7 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                                $("#input_1_10").val("11207");
                             }
                             if(ciudad_origen=='Vigo'){
-                               $("#input_1_10").val("36410");  
+                               $("#input_1_10").val("36416");  
                             }
                             $("#input_1_11").val("");
                             $("#input_1_11").attr("readonly",false);
@@ -419,7 +424,7 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                                $("#input_1_11").val("11207");
                             }
                             if(ciudad_origen=='Vigo'){
-                               $("#input_1_11").val("36410");  
+                               $("#input_1_11").val("36416");  
                             }
                             $("#input_1_10").val("");
                             $("#input_1_10").attr("readonly",false);
@@ -511,7 +516,6 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                         $("#input_1_29").val(total_largo);
                         volumen=calcular_volumen();
                         $("#input_1_6").val(volumen.toFixed(2));
-                        console.log("esto es una prueba de entrada de largo",$(this).val());
                         /////////////////Mercancia Peligrosa//////
                         //actualizar_boton_cotizar();
                         merc_remontable=$("#input_1_18").val();
@@ -577,6 +581,31 @@ function filter_merge_tag( $text, $form, $entry, $url_encode, $esc_html, $nl2br 
                             $("#gform_submit_button_1").prop("disabled",true);
                         }else{
                             $("#gform_submit_button_1").prop("disabled",false);
+                        }
+
+                        if(peso == "" || peso == 0){
+                            $('#gform_submit_button_1').prop('disabled', true);
+                            $("#msj_1_5").html('Peso vacío.');
+                            $("#msj_1_5").addClass('validation_message');
+                        }else{
+                            $("#msj_1_5").html('');
+                            $("#msj_1_5").removeClass('validation_message');
+                        }
+                        
+                        if(cod_postal_destino == ""){
+                            $("#msj_1_10").html('Codigo Postal vacío.');
+                            $("#msj_1_10").addClass('validation_message');
+                        }else{
+                            $("#msj_1_10").html('');
+                            $("#msj_1_10").removeClass('validation_message');
+                        }
+
+                        if(cod_postal_origen == ""){
+                            $("#msj_1_11").html('Codigo Postal vacío.');
+                            $("#msj_1_11").addClass('validation_message');
+                        }else{
+                            $("#msj_1_11").html('');
+                            $("#msj_1_11").removeClass('validation_message');
                         }
                     });
 

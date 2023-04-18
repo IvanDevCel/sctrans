@@ -22,7 +22,7 @@ function generatehtml() {
         $impt_plataforma=empty(get_option('cotizacion_plataforma_elevadora'))?'35':get_option('cotizacion_plataforma_elevadora');
         $nombre_user="";
         $usuario = get_userdata (get_current_user_id());
-        $user_publico = $usuario->display_name;
+        $user_publico = $usuario->user_email;
         $valor_envio_aereo = 0;
         $valor_plataforma_elevadora = 0;
         $mercancia_peligrosa="No";
@@ -44,6 +44,9 @@ function generatehtml() {
             exit();  
         }
         foreach ($result as $value) {
+            if($value->meta_key === '16'){
+                $ciudad_origen = $value->meta_value;
+            }
             switch($value->meta_key) {
                 case 3:
                      $paquetes=$value->meta_value;
@@ -107,9 +110,9 @@ function generatehtml() {
            $peso_cotizar=$peso;
         }
         if($tipo_servicio=="Recogida"){
-            $precio_base = get_precio_por_zip($cod_postal_origen,$peso_cotizar,$largo);
+            $precio_base = get_precio_por_zip($ciudad_origen, $cod_postal_origen, $peso_cotizar,$largo);
         }else{
-            $precio_base = get_precio_por_zip($cod_postal_destino ,$peso_cotizar,$largo); 
+            $precio_base = get_precio_por_zip($ciudad_origen, $cod_postal_origen, $peso_cotizar,$largo); 
         }
         if ($precio_base == false) {
            echo "<h1>Lo siento, No podemos obtener el precio para el código postal ingresado.</h1>";
@@ -178,7 +181,7 @@ function generatehtml() {
                     <tbody >
                         <tr style="">
                             <td style="padding: 9px; background: #0A5687; color: white; border: solid 5px white;" ><strong>Precio Base</strong></td>
-                            <td style="padding: 9px; text-align:right; background: #F9F6F0; color: #010100"><span id="valor_precio_base"><?php echo $precio_base; ?> </span>€</td>
+                            <td style="padding: 9px; text-align:right; background: #F9F6F0; color: #010100"><span id="valor_precio_base"><?php echo number_format($precio_base,2); ?> </span>€</td>
                         </tr>
                         <tr style="">
                             <td style="padding: 9px; background: #0A5687; color: white; border: solid 5px white;" ><strong>Suplemento Aeropuerto/Puerto</strong></td>
@@ -198,7 +201,7 @@ function generatehtml() {
                             </td>
                         </tr>
                         <?php if($mercancia_peligrosa=="Si"){ ?>
-                        <tr><td style="padding: 9px; background: #0A5687; color: white; border: solid 5px white;" ><strong>Recargo del combustible</strong></td>
+                        <tr><td style="padding: 9px; background: #0A5687; color: white; border: solid 5px white;" ><strong>Recargo del combustible <?php echo "(".$rec_comb."%)"?></strong></td>
                             <td style="padding: 9px; text-align:right; background: #F9F6F0; color: #010100; border: solid 5px white;">
                                 <span id="valor_recargo_combustible">
                                 <?php echo $valor_rec_comb; ?> </span>€
